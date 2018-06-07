@@ -1,0 +1,27 @@
+{%- extends "oauth2/base.jinja2" -%}
+
+{%- block body -%}
+
+<table class="table">
+    <!-- <caption>我的应用</caption> -->
+    <thead>
+        <tr>
+        <th>应用名称</th>
+        <th>信息</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+        <tr>
+            <td> {{ client.client_name|safe }}</td>
+            <td>
+                {{ client.client_info|tojson }}
+                <p>
+                {{ client.client_metadata|tojson }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{%- endblock -%}

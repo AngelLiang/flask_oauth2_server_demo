@@ -1,0 +1,285 @@
+{%- import 'admin/layout.jinja2' as layout with context -%}
+{%- import 'admin/static.html' as admin_static with context -%}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    {%- block _head -%}
+    <title>
+        {%- block title -%}
+            {%- if admin_view.category -%}{{ admin_view.category }} - {%- endif -%}
+            {{ admin_view.name }} - {{ admin_view.admin.name }}
+        {%- endblock -%} {# title #}
+    </title>
+
+    {%- block head_meta -%}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {%- if admin_view -%}
+        <meta name="description" content="{{ admin_view.admin.name }}">
+        {%- endif -%} {# admin_view #}
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
+    {%- endblock -%} {# head_meta #}
+
+    {%- block head_css -%}
+        <link href="{{ admin_static.url(filename='bootstrap/bootstrap3/swatch/{swatch}/bootstrap.min.css'.format(swatch=config.get('FLASK_ADMIN_SWATCH', 'default')), v='3.3.5') }}" rel="stylesheet">
+        {%if config.get('FLASK_ADMIN_SWATCH', 'default') == 'default' -%} 
+            {# <link href="{{ admin_static.url(filename='bootstrap/bootstrap3/css/bootstrap-theme.min.css', v='3.3.5') }}" rel="stylesheet"> #}
+            <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" rel="stylesheet">
+        {%endif%}
+
+        <link href="{{ admin_static.url(filename='admin/css/bootstrap3/admin.css', v='1.1.1') }}" rel="stylesheet">
+
+        <!-- MetisMenu CSS -->
+        {# <link href="{{ url_for('static', filename='startbootstrap-sb-admin-2-gh-pages/vendor/metisMenu/metisMenu.min.css') }}" rel="stylesheet"> #}
+        <link href="https://cdn.bootcss.com/metisMenu/1.1.3/metisMenu.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        {# <link href="{{ url_for('static', filename='startbootstrap-sb-admin-2-gh-pages/dist/css/sb-admin-2.css') }}" rel="stylesheet"> #}
+        <link href="https://cdn.bootcss.com/startbootstrap-sb-admin-2/3.3.7/css/sb-admin-2.min.css" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="{{ url_for('static', filename='sb-admin-2/vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+
+        <script src="https://cdn.bootcss.com/moment.js/2.22.1/moment.min.js"></script>
+
+        {%- if admin_view.extra_css -%}
+          {%- for css_url in admin_view.extra_css -%}
+            <link href="{{ css_url }}" rel="stylesheet">
+          {%- endfor -%}
+        {%- endif -%}
+
+        <style>
+        body {
+            padding-top: 4px;
+        }
+        </style>
+    {%- endblock -%} {# head_css #}
+
+    {%- block head -%}
+    {%- endblock -%}
+    {%- block head_tail -%}
+    {%- endblock -%}
+
+    {%- endblock -%} {# _head #}
+  </head>
+
+  <body>
+      {%- block _body -%}
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('admin.index') }}"> {{ admin_view.admin.name }} </a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <!-- 扩展功能 -->
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                         <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down">扩展功能</i>
+                    </a>
+                    
+                     {%- block menu_links -%}
+                        {{ layout.menu_links() }}
+                     {%- endblock -%}
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+
+                <!-- 后台任务 -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                         <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"> </i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 1</strong>
+                                        <span class="pull-right text-muted">40% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>查看所有任务</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+
+                <!-- 消息 -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell fa-fw"></i>
+                            {# 消息数量 #}
+                            <span class="badge"></span> 
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                    
+                        {# <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">5 minutes ago</span>
+                                </div>
+                            </a>
+                        </li> #}
+
+                        <li class="divider"></li>
+                        <li>
+                            {# 消息主页链接 #}
+                            {# <a class="text-center" href="{{ url_for('messages.index_view') }}"> #}
+                            <a class="text-center" href="#">
+                                <strong>查看所有消息</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> {{ current_user.username }} <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <!-- 用户信息 -->
+                        <li><a href="/admin"><i class="fa fa-user fa-fw"></i>仪表盘</a></li>
+                        <!-- 设置 -->
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>设置</a></li>
+                        <li class="divider"></li>
+                        <!-- 登出 -->
+                        <li><a href="{{ url_for('user.logout') }}"><i class="fa fa-sign-out fa-fw"></i>登出</a></li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+           <!-- 侧边栏 -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                         <!-- 搜索框 -->
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+
+                    {%- block main_menu -%}
+                        {{ layout.menu() }}
+                    {%- endblock -%} 
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+ <!--
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 class="page-header">Dashboard</h1>
+                </div>
+            </div>
+-->
+
+        <div class="row">
+        <p>
+            {%- block access_control -%} 
+            {%- endblock -%} {# access_control #}
+            {%- block messages -%} 
+                <div class="col-lg-12 col-md-12">
+                    {{ layout.messages() }}
+                </div>
+            {%- endblock -%}  {# messages #}
+            {# store the jinja2 context for form_rules rendering logic #}
+            {%- set render_ctx = h.resolve_ctx() -%} 
+        </div>
+
+        {# <div class="row"> #}
+            {%- block body -%} {%- endblock -%} 
+        {# </div> #}
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+
+   {%- block tail_js -%} 
+        {# jquery #}
+        {# <script src="{{ admin_static.url(filename='vendor/jquery.min.js', v='2.1.4') }}" type="text/javascript"></script> #}
+        <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+
+        {# bootstrap #}
+        {# <script src="{{ admin_static.url(filename='bootstrap/bootstrap3/js/bootstrap.min.js', v='3.3.5') }}" type="text/javascript"></script> #}
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        {# moment #}
+        {# <script src="{{ admin_static.url(filename='vendor/moment.min.js', v='2.9.0') }}" type="text/javascript"></script> #}
+        {# <script src="https://cdn.bootcss.com/moment.js/2.22.1/moment.min.js"></script> #}
+
+        {# select2 #}
+        {# <script src="{{ admin_static.url(filename='vendor/select2/select2.min.js', v='3.5.2') }}" type="text/javascript"></script> #}
+        <script src="https://cdn.bootcss.com/select2/3.5.4/select2.min.js"></script>
+
+        <!-- sb-admin-theme  -->
+        {# metisMenu #}
+        {# <script src="{{ url_for('static', filename='{theme_folder}/vendor/metisMenu/metisMenu.min.js'.format(theme_folder=config.get('FLASK_ADMIN_THEME_FOLDER'))) }}"></script> #}
+        <script src="https://cdn.bootcss.com/metisMenu/1.1.3/metisMenu.min.js"></script>
+
+        {# sb-admin-2 #}
+        {# <script src="{{ url_for('static', filename='{theme_folder}/dist/js/sb-admin-2.js'.format(theme_folder=config.get('FLASK_ADMIN_THEME_FOLDER'))) }}"></script> #}
+        <script src="https://cdn.bootcss.com/startbootstrap-sb-admin-2/3.3.7/js/sb-admin-2.min.js"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+
+        {%- if admin_view.extra_js -%} 
+            {%- for js_url in admin_view.extra_js -%} 
+                <script src="{{ js_url }}" type="text/javascript"></script>
+            {%- endfor -%} 
+        {%- endif -%} 
+
+    {%- endblock -%} {# tail_js #}
+
+    {%- block tail -%} 
+    {%- endblock -%}    {# tail #}
+
+    {%- endblock -%}   {# _body #}
+  </body>
+</html>

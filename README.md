@@ -1,4 +1,4 @@
-# flask auth server demo
+# flask oauth2 server demo
 
 # 快速开始
 
@@ -6,14 +6,11 @@ Windows PowerShell：
 
 ```PowerShell
 # PowerShell
-python3 -m venv venv
-.\venv\Scripts\activate
-(venv) python3 -m pip install --upgrade pip
-(venv) pip3 install -U setuptools
-(venv) pip3 install -r .\requirements.txt
-(venv) flask initdb
-(venv) flask createsuperuser
-(venv) flask run
+pipenv install
+pipenv shell
+flask initdb
+flask createsuperuser
+flask run
 ```
 
 禁用 authlib 检查 https，`AUTHLIB_INSECURE_TRANSPORT=1`已经写在`.flaskenv`文件里。

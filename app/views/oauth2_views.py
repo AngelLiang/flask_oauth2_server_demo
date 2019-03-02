@@ -55,6 +55,7 @@ def get_token():
                     "expires_in": token.expires_in,
                     "token_type": token.token_type,
                 }
+                return s_json.make_success(data)
 
     return jsonify(response_json)
 

@@ -51,10 +51,11 @@ password=${password}
 之后就可以拿这个access_token放在请求头`Authorization`处`Authorization: Bearer ${access_token}`请求`/api/me`获取资源。
 
 ```Python
+# app\views\oauth2_views.py
 @views.route('/api/me')
 @require_oauth()
 def api_me():
-    pass
+    ...
 ```
 
 

@@ -6,7 +6,7 @@ from authlib.flask.oauth2.sqla import (
     create_query_client_func, create_save_token_func,
     create_revocation_endpoint, create_bearer_token_validator
 )
-from authlib.oauth2.rfc6750 import BearerTokenValidator
+from authlib.specs.rfc6750 import BearerTokenValidator
 from authlib.specs.rfc6749 import grants
 
 
@@ -78,7 +78,6 @@ class RefreshTokenGrant(grants.RefreshTokenGrant):
 
 
 authorization = AuthorizationServer()
-require_oauth = ResourceProtector()
 
 
 class MyBearerTokenValidator(BearerTokenValidator):
@@ -90,6 +89,9 @@ class MyBearerTokenValidator(BearerTokenValidator):
 
     def token_revoked(self, token):
         return token.revoked
+
+
+require_oauth = ResourceProtector()
 
 
 def init_oauth(app):

@@ -31,7 +31,7 @@ from app.json_response import singleton_json_response as s_json
 
 @views.route('/oauth/token/get', methods=['GET', 'POST'])
 def get_token():
-    """发布access token"""
+    """获取access token"""
     response_json = s_json.make_fail()
 
     # 必须给 authorization.create_token_response() 提供以下字段
@@ -44,18 +44,25 @@ def get_token():
     password = request.form.get("password")
 
     user = User.query.filter_by(username=username).first()
-    if user:
-        ret = user.verify_password(password)
-        if ret:
-            token = OAuth2Token.query.filter_by(user_id=user.id).first()
-            if token and not token.is_access_token_expired():
-                data = {
-                    "access_token": token.access_token,
-                    "issued_at": token.issued_at,
-                    "expires_in": token.expires_in,
-                    "token_type": token.token_type,
-                }
-                return s_json.make_success(data)
+    if user and user.verify_password(password):
+        token = OAuth2Token.query.filter_by(user_id=user.id).first()
+        if token and not token.is_access_token_expired():
+            pass
+        else:
+            return jsonify(s_json.make_success())
+            # token = OAuth2Token(user=user)
+            # db.session.add(token)
+            # db.session.commit()
+            # current_app.logger.info('create OAuth2Token')
+        data = {
+            "access_token": token.access_token,
+            "issued_at": token.issued_at,
+            "expires_in": token.expires_in,
+            "token_type": token.token_type,
+        }
+        return jsonify(s_json.make_success(data))
+    else:
+        current_app.logger.info('user not found or password error')
 
     return jsonify(response_json)
 

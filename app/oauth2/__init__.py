@@ -1,10 +1,14 @@
 # coding-utf-8
 
+from werkzeug.security import gen_salt
 from authlib.flask.oauth2 import AuthorizationServer, ResourceProtector
 from authlib.flask.oauth2.sqla import (
-    create_query_client_func, create_save_token_func, create_revocation_endpoint, create_bearer_token_validator,)
+    create_query_client_func, create_save_token_func,
+    create_revocation_endpoint, create_bearer_token_validator
+)
+from authlib.oauth2.rfc6750 import BearerTokenValidator
 from authlib.specs.rfc6749 import grants
-from werkzeug.security import gen_salt
+
 
 # db
 from app.database import db
@@ -77,6 +81,17 @@ authorization = AuthorizationServer()
 require_oauth = ResourceProtector()
 
 
+class MyBearerTokenValidator(BearerTokenValidator):
+    def authenticate_token(self, token_string):
+        return OAuth2Token.query.filter_by(access_token=token_string).first()
+
+    def request_invalid(self, request):
+        return False
+
+    def token_revoked(self, token):
+        return token.revoked
+
+
 def init_oauth(app):
     """OAuth配置app"""
     query_client = create_query_client_func(db.session, OAuth2Client)
@@ -96,5 +111,10 @@ def init_oauth(app):
     authorization.register_endpoint(revocation_cls)
 
     # protect resource
-    bearer_cls = create_bearer_token_validator(db.session, OAuth2Token)
-    require_oauth.register_token_validator(bearer_cls())
+
+    # only bearer token is supported currently
+    require_oauth.register_token_validator(MyBearerTokenValidator())
+
+    # you can also create BearerTokenValidator with shortcut
+    # bearer_cls = create_bearer_token_validator(db.session, OAuth2Token)
+    # require_oauth.register_token_validator(bearer_cls())

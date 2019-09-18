@@ -58,4 +58,11 @@ def api_me():
     ...
 ```
 
+# 使用步骤2
 
+修改`.env.example`创建`.env`，使用client目录下的脚本获取相关变量并设置。
+
+```powershell
+pipenv run python client/main.py
+pipenv run python client/fetch_resource.py
+```

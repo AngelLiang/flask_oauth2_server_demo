@@ -5,4 +5,3 @@ FLASK_ENV = 'development'
 
 # disable check https
 AUTHLIB_INSECURE_TRANSPORT = 1
-

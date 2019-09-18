@@ -120,8 +120,8 @@ def authorize():
 
 
 @views.route('/api/me')
-# @require_oauth('profile')
-@require_oauth()
+@require_oauth('profile')
+# @require_oauth()
 def api_me():
     """
     @require_oauth()

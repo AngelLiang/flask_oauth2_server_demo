@@ -76,7 +76,7 @@ class RefreshTokenGrant(grants.RefreshTokenGrant):
         """认证用户"""
         return User.query.get(credential.user_id)
 
-
+# 认证服务器
 authorization = AuthorizationServer()
 
 
@@ -123,7 +123,7 @@ class MyBearerTokenValidator(BearerTokenValidator):
         """
         return token.revoked
 
-
+# 资源保护器
 require_oauth = ResourceProtector()
 
 

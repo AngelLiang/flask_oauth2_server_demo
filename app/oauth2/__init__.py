@@ -129,6 +129,8 @@ require_oauth = ResourceProtector()
 
 def init_oauth(app):
     """OAuth配置app"""
+
+    # 认证服务器的配置
     query_client = create_query_client_func(db.session, OAuth2Client)
     save_token = create_save_token_func(db.session, OAuth2Token)
     authorization.init_app(
@@ -145,6 +147,8 @@ def init_oauth(app):
     revocation_cls = create_revocation_endpoint(db.session, OAuth2Token)
     authorization.register_endpoint(revocation_cls)
 
+
+    # 资源服务器的配置
     # protect resource
 
     # only bearer token is supported currently

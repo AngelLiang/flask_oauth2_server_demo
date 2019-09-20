@@ -8,9 +8,6 @@ from flask_admin import BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.model import BaseModelView
 
-# model
-from app.models import User
-
 
 class MyBaseView(BaseView):
 

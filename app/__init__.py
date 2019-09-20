@@ -1,5 +1,11 @@
 # coding=utf-8
 
+from app.views.base_view import MyAdminIndexView
+from app.views import init_admin_views
+from flask_admin import Admin
+from werkzeug.contrib.cache import SimpleCache, RedisCache
+from flask_babelex import Babel
+from .database import db
 import os
 import sys
 from flask import Flask, jsonify, url_for, request, current_app, session
@@ -14,12 +20,10 @@ curr_dir = os.path.dirname(os.path.realpath(__file__))
 
 # from flask_sqlalchemy import SQLAlchemy
 # db = SQLAlchemy()
-from .database import db
 
 ###############################################################################
 # 国际化
 
-from flask_babelex import Babel
 babel = Babel()
 
 
@@ -33,7 +37,6 @@ def get_locale():
 ###############################################################################
 # cache
 
-from werkzeug.contrib.cache import SimpleCache, RedisCache
 # try:
 #     cache = RedisCache()
 #     cache.get("connection")  # 连接测试
@@ -51,18 +54,15 @@ cache = SimpleCache()
 try:
     from .utils.custom_user_manager import CustomUserManager
     user_manager = CustomUserManager()
-    print("user_manager init from custom_user_manager")
+    # print("user_manager init from custom_user_manager")
 except Exception:
     from flask_user import UserManager
     user_manager = UserManager(None, None, None)
-    print("user_manager init from flask_user")
+    # print("user_manager init from flask_user")
 
 ###############################################################################
 # flask admin
 
-from flask_admin import Admin
-from app.views import init_admin_views
-from app.views.base_view import MyAdminIndexView
 
 amdin_index_view = MyAdminIndexView(
     name="仪表盘",
@@ -103,6 +103,10 @@ def create_app(config_name):
     # views
     from app.views import views
     app.register_blueprint(views)
+
+    # apis
+    from app.apis import api_bp
+    app.register_blueprint(api_bp)
 
     from app.jinja2_env import init_jinja2_env
     init_jinja2_env(app)
